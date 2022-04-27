@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "azurerm" {
-      resource_group_name = "paylocity-code-challenge"
-      storage_account_name = ""
+      resource_group_name = "tfstate"
+      storage_account_name = "tfstate15686"
       container_name = "tfstate"
-      key = ""
+      key = "terraform.tfstate"
   }
 }
 
