@@ -69,9 +69,22 @@ resource "azurerm_linux_web_app" "api" {
   }
 }
 
-
 resource "azurerm_role_assignment" "api_pull" {
   principal_id         = azurerm_linux_web_app.api.identity.0.principal_id
   role_definition_name = "AcrPull"
   scope                = azurerm_container_registry.registry.id
+}
+
+resource "azurerm_container_registry_webhook" "api" {
+  name                = "apiHook"
+  resource_group_name = azurerm_resource_group.primary.name
+  registry_name       = azurerm_container_registry.registry.name
+  location            = azurerm_resource_group.primary.location
+  service_uri         = "https://${azurerm_linux_web_app.api.site_credential[0].name}:${azurerm_linux_web_app.api.site_credential[0].password}@${azurerm_linux_web_app.api.name}.scm.azurewebsites.net/docker/hook"
+  status              = "enabled"
+  scope               = "api"
+  actions             = ["push"]
+  custom_headers = {
+    "Content-Type" = "application/json"
+  }
 }

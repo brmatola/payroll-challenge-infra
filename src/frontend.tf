@@ -30,3 +30,17 @@ resource "azurerm_role_assignment" "frontend_pull" {
   role_definition_name = "AcrPull"
   scope                = azurerm_container_registry.registry.id
 }
+
+resource "azurerm_container_registry_webhook" "frontend" {
+  name                = "frontend"
+  resource_group_name = azurerm_resource_group.primary.name
+  registry_name       = azurerm_container_registry.registry.name
+  location            = azurerm_resource_group.primary.location
+  service_uri         = "https://${azurerm_linux_web_app.frontend.site_credential[0].name}:${azurerm_linux_web_app.frontend.site_credential[0].password}@${azurerm_linux_web_app.frontend.name}.scm.azurewebsites.net/docker/hook"
+  status              = "enabled"
+  scope               = "frontend"
+  actions             = ["push"]
+  custom_headers = {
+    "Content-Type" = "application/json"
+  }
+}
