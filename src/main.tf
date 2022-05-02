@@ -11,7 +11,7 @@ resource "azurerm_container_registry" "registry" {
 }
 
 module "api_acr_write_token" {
-  source = "./moduels/writeToken"
+  source = "./modules/writeToken"
 
   name                    = "write-api"
   repository_name         = "api"
@@ -20,7 +20,7 @@ module "api_acr_write_token" {
 }
 
 module "frontend_acr_write_token" {
-  source = "./moduels/writeToken"
+  source = "./modules/writeToken"
 
   name                    = "write-frontend"
   repository_name         = "frontend"
