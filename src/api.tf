@@ -64,7 +64,7 @@ resource "azurerm_linux_web_app" "api" {
   app_settings = {
     "DOCKER_ENABLE_CI"                   = "true"
     "DOCKER_REGISTRY_SERVER_URL"         = "https://${azurerm_container_registry.registry.login_server}"
-    "FrontendOrigin"                     = "http://localhost:3000"
+    "FrontendOrigin"                     = "https://payroll-challenge-frontend.azurewebsites.net"
     "ConnectionStrings__EmployeeContext" = "Host=${azurerm_postgresql_server.server.fqdn};Port=5432;Database=${local.database_name};Username=${local.server_username}@${local.server_name};Password=${local.server_password}"
   }
 }
