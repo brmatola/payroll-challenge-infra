@@ -57,6 +57,7 @@ resource "azurerm_linux_web_app" "api" {
   }
 }
 
+
 resource "azurerm_role_assignment" "api_pull" {
   principal_id         = azurerm_linux_web_app.api.identity.0.principal_id
   role_definition_name = "AcrPull"
