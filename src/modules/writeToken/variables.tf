@@ -13,3 +13,4 @@ variable "container_registry_name" {
 variable "resource_group_name" {
   type = string
 }
+
