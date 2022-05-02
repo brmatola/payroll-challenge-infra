@@ -1,10 +1,16 @@
+locals {
+  server_username = "postgresql"
+  server_password = "password123!"
+  database_name   = "api-psqldatabase"
+}
+
 resource "azurerm_postgresql_server" "server" {
   name                = "api-psqlserver"
   location            = azurerm_resource_group.primary.location
   resource_group_name = azurerm_resource_group.primary.name
 
-  administrator_login          = "postgresql"
-  administrator_login_password = "password123!"
+  administrator_login          = local.server_username
+  administrator_login_password = local.server_password
 
   sku_name   = "GP_Gen5_4"
   version    = "9.6"
@@ -20,7 +26,7 @@ resource "azurerm_postgresql_server" "server" {
 }
 
 resource "azurerm_postgresql_database" "db" {
-  name                = "api-psqldatabase"
+  name                = local.database_name
   resource_group_name = azurerm_resource_group.primary.name
   server_name         = azurerm_postgresql_server.server.name
   charset             = "UTF8"
@@ -35,9 +41,14 @@ resource "azurerm_linux_web_app" "api" {
 
   site_config {
     always_on = true
-    application_stack = {
+    application_stack {
       docker_image     = "${azurerm_container_registry.registry.login_server}/api"
       docker_image_tag = "latest"
     }
+  }
+
+  app_settings = {
+    "FrontendOrigin"                     = "http://localhost:3000"
+    "ConnectionStrings__EmployeeContext" = "Host=${azurerm_postgresql_server.server.fqdn};Port=5432;Database=${local.database_name};Username=${local.server_username};Password=${local.server_password}"
   }
 }
