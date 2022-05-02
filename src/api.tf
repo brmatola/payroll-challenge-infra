@@ -4,7 +4,7 @@ resource "azurerm_postgresql_server" "server" {
   resource_group_name = azurerm_resource_group.primary.name
 
   administrator_login          = "postgresql"
-  administrator_login_password = "postgresql"
+  administrator_login_password = "password123!"
 
   sku_name   = "GP_Gen5_4"
   version    = "9.6"
