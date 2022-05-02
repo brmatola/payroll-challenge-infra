@@ -34,6 +34,14 @@ resource "azurerm_postgresql_database" "db" {
   collation           = "English_United States.1252"
 }
 
+resource "azurerm_postgresql_firewall_rule" "azure" {
+  name                = "azure"
+  resource_group_name = azurerm_resource_group.primary.name
+  server_name         = azurerm_postgresql_server.server.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
 resource "azurerm_linux_web_app" "api" {
   name                = "payroll-challenge-api"
   resource_group_name = azurerm_resource_group.primary.name
