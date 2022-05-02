@@ -1,11 +1,12 @@
 locals {
+  server_name     = "api-psqlserver"
   server_username = "postgresql"
   server_password = "password123!"
   database_name   = "api-psqldatabase"
 }
 
 resource "azurerm_postgresql_server" "server" {
-  name                = "api-psqlserver"
+  name                = local.server_name
   location            = azurerm_resource_group.primary.location
   resource_group_name = azurerm_resource_group.primary.name
 
@@ -40,7 +41,8 @@ resource "azurerm_linux_web_app" "api" {
   service_plan_id     = azurerm_service_plan.primary.id
 
   site_config {
-    always_on = true
+    always_on                               = true
+    container_registry_use_managed_identity = true
     application_stack {
       docker_image     = "${azurerm_container_registry.registry.login_server}/api"
       docker_image_tag = "latest"
@@ -52,8 +54,10 @@ resource "azurerm_linux_web_app" "api" {
   }
 
   app_settings = {
+    "DOCKER_ENABLE_CI"                   = "true"
+    "DOCKER_REGISTRY_SERVER_URL"         = "https://${azurerm_container_registry.registry.login_server}"
     "FrontendOrigin"                     = "http://localhost:3000"
-    "ConnectionStrings__EmployeeContext" = "Host=${azurerm_postgresql_server.server.fqdn};Port=5432;Database=${local.database_name};Username=${local.server_username};Password=${local.server_password}"
+    "ConnectionStrings__EmployeeContext" = "Host=${azurerm_postgresql_server.server.fqdn};Port=5432;Database=${local.database_name};Username=${local.server_username}@${local.server_name};Password=${local.server_password}"
   }
 }
 
