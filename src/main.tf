@@ -10,20 +10,20 @@ resource "azurerm_container_registry" "registry" {
   sku                 = "Premium"
 }
 
-resource "azurerm_container_registry_scope_map" "write_api" {
+module "api_acr_write_token" {
+  source = "./moduels/writeToken"
+
   name                    = "write-api"
+  repository_name         = "api"
   container_registry_name = azurerm_container_registry.registry.name
   resource_group_name     = azurerm_resource_group.primary.name
-  actions = [
-    "repositories/api/content/write",
-    "repositories/api/content/read"
-  ]
 }
 
-resource "azurerm_container_registry_token" "write_api" {
-  name                    = "write-api"
+module "frontend_acr_write_token" {
+  source = "./moduels/writeToken"
+
+  name                    = "write-frontend"
+  repository_name         = "frontend"
   container_registry_name = azurerm_container_registry.registry.name
   resource_group_name     = azurerm_resource_group.primary.name
-  scope_map_id            = azurerm_container_registry_scope_map.write_api.id
-  enabled                 = true
 }
