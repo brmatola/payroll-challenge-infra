@@ -27,4 +27,17 @@ resource "azurerm_postgresql_database" "db" {
   collation           = "English_United States.1252"
 }
 
+resource "azurerm_linux_web_app" "api" {
+  name                = "payroll-challenge-api"
+  resource_group_name = azurerm_resource_group.primary.name
+  location            = azurerm_resource_group.primary.location
+  service_plan_id     = azurerm_service_plan.primary.id
 
+  site_config {
+    always_on = true
+    application_stack = {
+      docker_image     = "${azurerm_container_registry.registry.login_server}/api"
+      docker_image_tag = "latest"
+    }
+  }
+}
