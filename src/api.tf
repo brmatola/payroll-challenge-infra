@@ -47,8 +47,18 @@ resource "azurerm_linux_web_app" "api" {
     }
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   app_settings = {
     "FrontendOrigin"                     = "http://localhost:3000"
     "ConnectionStrings__EmployeeContext" = "Host=${azurerm_postgresql_server.server.fqdn};Port=5432;Database=${local.database_name};Username=${local.server_username};Password=${local.server_password}"
   }
+}
+
+resource "azurerm_role_assignment" "api_pull" {
+  principal_id         = azurerm_linux_web_app.api.identity.0.principal_id
+  role_definition_name = "AcrPull"
+  scope                = azurerm_container_registry.registry.id
 }
