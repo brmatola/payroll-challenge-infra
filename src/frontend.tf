@@ -20,7 +20,7 @@ resource "azurerm_linux_web_app" "frontend" {
   app_settings = {
     "DOCKER_ENABLE_CI"           = "true"
     "DOCKER_REGISTRY_SERVER_URL" = "https://${azurerm_container_registry.registry.login_server}"
-    "BackendUrl"                 = "https://payroll-challenge-api.azurewebsites.net"
+    "Backend_Url"                = "https://payroll-challenge-api.azurewebsites.net"
   }
 }
 
