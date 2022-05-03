@@ -15,6 +15,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_SP_CLIENT_SECRET }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
     runs-on: ubuntu-latest
     
     steps:
@@ -27,4 +28,4 @@ jobs:
         
       - name: Terraform Apply
         working-directory: ./src
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false -var="db_password=$DB_PASSWORD"

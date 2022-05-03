@@ -1,7 +1,7 @@
 locals {
   server_name     = "api-psqlserver"
   server_username = "postgresql"
-  server_password = "password123!" #TODO: put this elsewhere
+  server_password = var.db_password
   database_name   = "api-psqldatabase"
 }
 
